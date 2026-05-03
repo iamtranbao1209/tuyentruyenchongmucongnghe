@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Làm Chủ Công Nghệ - Đừng Để Tương Lai Bỏ Lại</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            900: '#1e3a8a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-text {
+            background: linear-gradient(to right, #3b82f6, #8b5cf6, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-bg {
+            background-color: #0f172a;
+            background-image: radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+                              radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.15) 0%, transparent 50%);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+        
+        /* Hiệu ứng chuyển trang mượt mà */
+        .page-view {
+            display: none;
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+        .page-view.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="font-sans bg-slate-50 text-slate-800 antialiased selection:bg-brand-500 selection:text-white flex flex-col min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 transition-all duration-300 shadow-sm" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="navigateTo('home')">
+                    <i class="fa-solid fa-microchip text-brand-600 text-2xl mr-2"></i>
+                    <span class="font-bold text-xl tracking-tight text-slate-900">Tech<span class="text-brand-600">Youth</span></span>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="javascript:void(0)" onclick="navigateTo('home')" class="nav-link text-sm font-medium text-brand-600 transition-colors" data-target="home">Trang Chủ</a>
+                    <a href="javascript:void(0)" onclick="navigateTo('thuc-trang')" class="nav-link text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors" data-target="thuc-trang">Thực Trạng</a>
+                    <a href="javascript:void(0)" onclick="navigateTo('hau-qua')" class="nav-link text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors" data-target="hau-qua">Hậu Quả</a>
+                    <a href="javascript:void(0)" onclick="navigateTo('giai-phap')" class="nav-link text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors" data-target="giai-phap">Giải Pháp</a>
+                    <a href="javascript:void(0)" onclick="navigateTo('test')" class="nav-link px-4 py-2 rounded-full bg-brand-600 text-white text-sm font-medium hover:bg-brand-700 transition-colors shadow-lg shadow-brand-500/30" data-target="test">Kiểm tra bản thân</a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-slate-600 hover:text-slate-900 focus:outline-none">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100 absolute w-full shadow-lg">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="javascript:void(0)" onclick="navigateTo('home')" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-brand-600 hover:bg-slate-50">Trang Chủ</a>
+                <a href="javascript:void(0)" onclick="navigateTo('thuc-trang')" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-brand-600 hover:bg-slate-50">Thực Trạng</a>
+                <a href="javascript:void(0)" onclick="navigateTo('hau-qua')" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-brand-600 hover:bg-slate-50">Hậu Quả</a>
+                <a href="javascript:void(0)" onclick="navigateTo('giai-phap')" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-brand-600 hover:bg-slate-50">Giải Pháp</a>
+                <a href="javascript:void(0)" onclick="navigateTo('test')" class="block px-3 py-2 mt-4 text-center rounded-md text-base font-medium bg-brand-600 text-white hover:bg-brand-700">Kiểm tra bản thân</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-grow">
+        
+        <!-- TRANG CHỦ (Hero Section) -->
+        <section id="home" class="page-view active hero-bg min-h-screen flex items-center pt-16 relative overflow-hidden">
+            <!-- Floating elements -->
+            <div class="absolute top-1/4 left-10 text-white/10 text-6xl animate-pulse"><i class="fa-brands fa-python"></i></div>
+            <div class="absolute bottom-1/4 right-10 text-white/10 text-6xl animate-bounce" style="animation-duration: 3s;"><i class="fa-solid fa-database"></i></div>
+            <div class="absolute top-1/3 right-1/4 text-white/10 text-5xl animate-pulse" style="animation-delay: 1s;"><i class="fa-solid fa-cloud"></i></div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <div class="text-left space-y-8">
+                        <div class="inline-flex items-center px-3 py-1 rounded-full bg-white/10 border border-white/20 text-blue-200 text-sm font-medium backdrop-blur-sm">
+                            <span class="flex h-2 w-2 rounded-full bg-blue-400 mr-2 animate-ping"></span>
+                            Chiến dịch nâng cao nhận thức số
+                        </div>
+                        <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight">
+                            Đừng Để Làn Sóng Số <br>
+                            <span class="gradient-text">Cuốn Trôi Tương Lai Bạn</span>
+                        </h1>
+                        <p class="text-lg md:text-xl text-slate-300 max-w-2xl leading-relaxed">
+                            Biết lướt TikTok không có nghĩa là bạn hiểu công nghệ. Giữa kỷ nguyên AI và tự động hóa, <strong>"Mù công nghệ"</strong> là bản án tử cho cơ hội nghề nghiệp của chính bạn. Đã đến lúc thức tỉnh!
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <button onclick="navigateTo('giai-phap')" class="px-8 py-4 rounded-full bg-brand-600 text-white text-lg font-semibold hover:bg-brand-500 transition-all transform hover:-translate-y-1 shadow-[0_0_20px_rgba(37,99,235,0.4)] text-center">
+                                Thay Đổi Ngay Hôm Nay
+                            </button>
+                            <button onclick="navigateTo('thuc-trang')" class="px-8 py-4 rounded-full bg-white/10 text-white text-lg font-semibold hover:bg-white/20 backdrop-blur-md transition-all border border-white/10 text-center">
+                                Tìm Hiểu Thêm
+                            </button>
+                        </div>
+                    </div>
+                    <div class="relative hidden lg:block">
+                        <!-- Image mockup representation using HTML/CSS -->
+                        <div class="relative w-full aspect-square max-w-md mx-auto">
+                            <div class="absolute inset-0 bg-gradient-to-tr from-brand-600 to-purple-600 rounded-3xl transform rotate-6 opacity-50 blur-lg"></div>
+                            <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                                 alt="Thanh niên sử dụng công nghệ" 
+                                 class="relative rounded-3xl shadow-2xl object-cover h-full w-full border border-white/10">
+                            
+                            <!-- Floating Badges -->
+                            <div class="absolute -left-8 top-1/4 bg-white p-4 rounded-xl shadow-xl flex items-center gap-3 animate-bounce" style="animation-duration: 4s;">
+                                <div class="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+                                    <i class="fa-solid fa-chart-line"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-500 font-medium">Nhu cầu việc làm IT</p>
+                                    <p class="text-sm font-bold text-slate-900">+45% mỗi năm</p>
+                                </div>
+                            </div>
+                            <div class="absolute -right-8 bottom-1/4 bg-white p-4 rounded-xl shadow-xl flex items-center gap-3 animate-bounce" style="animation-duration: 5s; animation-delay: 1s;">
+                                <div class="h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600">
+                                    <i class="fa-solid fa-robot"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-500 font-medium">Kỹ năng AI</p>
+                                    <p class="text-sm font-bold text-slate-900">Bắt buộc trong 2030</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Custom Shape Divider -->
+            <div class="absolute bottom-0 left-0 w-full overflow-hidden leading-none z-10">
+                <svg class="relative block w-full h-12 md:h-24" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                    <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C59.71,118,130.83,121.33,201.2,110.5,242.45,104.22,283.43,84.18,321.39,56.44Z" fill="#f8fafc"></path>
+                </svg>
+            </div>
+        </section>
+
+        <!-- TRANG 2: THỰC TRẠNG -->
+        <section id="thuc-trang" class="page-view min-h-screen pt-28 pb-20 bg-slate-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <h2 class="text-brand-600 font-semibold tracking-wide uppercase text-sm mb-3">Sự thật phũ phàng</h2>
+                    <h3 class="text-3xl md:text-4xl font-bold text-slate-900 mb-6">Mù công nghệ "Kiểu Mới" là gì?</h3>
+                    <p class="text-lg text-slate-600">Bạn có thể dành 8 tiếng mỗi ngày dùng điện thoại, nhưng điều đó không có nghĩa là bạn rành công nghệ. Hiện trạng "mù công nghệ" hiện nay ẩn nấp dưới vỏ bọc của sự giải trí.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Vấn đề 1 -->
+                    <div class="bg-white rounded-2xl p-8 shadow-sm border border-slate-100 hover:shadow-xl transition-shadow duration-300 group">
+                        <div class="h-14 w-14 rounded-2xl bg-red-100 text-red-600 flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition-transform">
+                            <i class="fa-brands fa-tiktok"></i>
+                        </div>
+                        <h4 class="text-xl font-bold text-slate-900 mb-3">Chỉ Biết Tiêu Thụ, Không Biết Tạo Ra</h4>
+                        <p class="text-slate-600">Thành thạo mọi trend trên mạng xã hội, nhưng lại lúng túng khi phải căn lề một văn bản Word, hoặc không biết cách tạo một bảng tính Excel cơ bản.</p>
+                    </div>
+                    <!-- Vấn đề 2 -->
+                    <div class="bg-white rounded-2xl p-8 shadow-sm border border-slate-100 hover:shadow-xl transition-shadow duration-300 group">
+                        <div class="h-14 w-14 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <h4 class="text-xl font-bold text-slate-900 mb-3">Ngây Thơ Với Dữ Liệu Cá Nhân</h4>
+                        <p class="text-slate-600">Sẵn sàng click vào mọi đường link "nhận quà", dùng chung một mật khẩu (như 123456) cho mọi tài khoản và không hiểu cơ chế lừa đảo trực tuyến (Phishing).</p>
+                    </div>
+                    <!-- Vấn đề 3 -->
+                    <div class="bg-white rounded-2xl p-8 shadow-sm border border-slate-100 hover:shadow-xl transition-shadow duration-300 group">
+                        <div class="h-14 w-14 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-brain"></i>
+                        </div>
+                        <h4 class="text-xl font-bold text-slate-900 mb-3">Sợ Hãi Công Cụ Mới (AI)</h4>
+                        <p class="text-slate-600">Tránh né hoặc từ chối tìm hiểu về Trí tuệ nhân tạo (ChatGPT, Copilot...). Coi công nghệ mới là thứ rắc rối thay vì là đòn bẩy hiệu suất.</p>
+                    </div>
+                </div>
+                
+                <div class="mt-16 text-center">
+                    <button onclick="navigateTo('hau-qua')" class="px-8 py-3 bg-brand-600 text-white rounded-lg font-bold hover:bg-brand-700 transition-colors shadow-lg">Xem Những Hậu Quả Kéo Theo <i class="fa-solid fa-arrow-right ml-2"></i></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- TRANG 3: HẬU QUẢ -->
+        <section id="hau-qua" class="page-view min-h-screen pt-28 pb-20 bg-slate-900 text-white relative">
+            <div class="absolute inset-0 overflow-hidden pointer-events-none">
+                <div class="absolute -top-1/2 -right-1/4 w-full h-full bg-red-500/5 blur-[120px] rounded-full"></div>
+            </div>
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                    <div>
+                        <img src="https://images.unsplash.com/photo-1522204523234-8729aa6e3d5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                             alt="Frustrated student" 
+                             class="rounded-2xl shadow-2xl opacity-80 hover:opacity-100 transition-opacity border border-slate-700">
+                    </div>
+                    <div>
+                        <div class="inline-flex items-center px-3 py-1 rounded-full bg-red-500/20 text-red-400 text-sm font-medium mb-6">
+                            <i class="fa-solid fa-triangle-exclamation mr-2"></i> Cảnh Báo
+                        </div>
+                        <h3 class="text-3xl md:text-4xl font-bold mb-6">Cái Giá Của Sự Thờ Ơ</h3>
+                        <p class="text-slate-400 text-lg mb-8">Thế giới đang số hóa với tốc độ chóng mặt. Những người chối bỏ việc nâng cấp kỹ năng số đang tự loại mình ra khỏi cuộc chơi.</p>
+                        
+                        <ul class="space-y-6">
+                            <li class="flex items-start">
+                                <div class="flex-shrink-0 h-6 w-6 rounded-full bg-red-500 flex items-center justify-center mt-1">
+                                    <i class="fa-solid fa-xmark text-white text-xs"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h5 class="text-xl font-semibold">Mất Lợi Thế Cạnh Tranh Nghề Nghiệp</h5>
+                                    <p class="text-slate-400 mt-1">Hơn 80% công việc tương lai yêu cầu kỹ năng số cơ bản. CV của bạn sẽ bị loại ngay vòng gửi xe nếu thiếu chúng.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="flex-shrink-0 h-6 w-6 rounded-full bg-red-500 flex items-center justify-center mt-1">
+                                    <i class="fa-solid fa-xmark text-white text-xs"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h5 class="text-xl font-semibold">Tốn Thời Gian & Sức Lực Vô Ích</h5>
+                                    <p class="text-slate-400 mt-1">Làm thủ công những việc mà AI hoặc một hàm Excel đơn giản có thể giải quyết trong 3 giây.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="flex-shrink-0 h-6 w-6 rounded-full bg-red-500 flex items-center justify-center mt-1">
+                                    <i class="fa-solid fa-xmark text-white text-xs"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h5 class="text-xl font-semibold">Trở Thành Nạn Nhân Của Lừa Đảo</h5>
+                                    <p class="text-slate-400 mt-1">Thiếu hiểu biết về an toàn thông tin biến bạn thành "con mồi" béo bở cho các chiêu trò lừa đảo qua mạng ngày càng tinh vi.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="mt-16 text-center">
+                    <button onclick="navigateTo('giai-phap')" class="px-8 py-3 bg-white text-slate-900 rounded-lg font-bold hover:bg-slate-200 transition-colors shadow-lg">Vậy Tôi Phải Làm Gì? <i class="fa-solid fa-arrow-right ml-2"></i></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- TRANG 4: GIẢI PHÁP -->
+        <section id="giai-phap" class="page-view min-h-screen pt-28 pb-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <h2 class="text-brand-600 font-semibold tracking-wide uppercase text-sm mb-3">Hành Động Ngay</h2>
+                    <h3 class="text-3xl md:text-4xl font-bold text-slate-900 mb-6">Trang Bị "Vũ Khí" Công Nghệ</h3>
+                    <p class="text-lg text-slate-600">Không cần phải trở thành lập trình viên xuất chúng, bạn chỉ cần thay đổi tư duy và nắm vững những kỹ năng sinh tồn trong thời đại số.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Step 1 -->
+                    <div class="relative p-6 bg-slate-50 rounded-2xl border border-slate-100 text-center hover:-translate-y-2 transition-transform duration-300">
+                        <div class="absolute -top-6 left-1/2 -translate-x-1/2 h-12 w-12 rounded-full bg-brand-600 text-white font-bold text-xl flex items-center justify-center border-4 border-white shadow-md">1</div>
+                        <div class="mt-8 text-brand-600 text-4xl mb-4"><i class="fa-solid fa-desktop"></i></div>
+                        <h4 class="text-lg font-bold text-slate-900 mb-2">Làm Chủ Công Cụ Văn Phòng</h4>
+                        <p class="text-sm text-slate-600">Học Word, Excel, PowerPoint cơ bản. Biết dùng Google Workspace, Canva, Notion để tổ chức công việc.</p>
+                    </div>
+                    
+                    <!-- Step 2 -->
+                    <div class="relative p-6 bg-slate-50 rounded-2xl border border-slate-100 text-center hover:-translate-y-2 transition-transform duration-300">
+                        <div class="absolute -top-6 left-1/2 -translate-x-1/2 h-12 w-12 rounded-full bg-brand-600 text-white font-bold text-xl flex items-center justify-center border-4 border-white shadow-md">2</div>
+                        <div class="mt-8 text-purple-600 text-4xl mb-4"><i class="fa-solid fa-magnifying-glass"></i></div>
+                        <h4 class="text-lg font-bold text-slate-900 mb-2">Kỹ Năng Tìm Kiếm (Googling)</h4>
+                        <p class="text-sm text-slate-600">Biết cách sử dụng từ khóa, toán tử tìm kiếm để tự giải quyết 90% vấn đề gặp phải thay vì hỏi ngay người khác.</p>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="relative p-6 bg-slate-50 rounded-2xl border border-slate-100 text-center hover:-translate-y-2 transition-transform duration-300">
+                        <div class="absolute -top-6 left-1/2 -translate-x-1/2 h-12 w-12 rounded-full bg-brand-600 text-white font-bold text-xl flex items-center justify-center border-4 border-white shadow-md">3</div>
+                        <div class="mt-8 text-green-600 text-4xl mb-4"><i class="fa-solid fa-lock"></i></div>
+                        <h4 class="text-lg font-bold text-slate-900 mb-2">Bảo Mật Cơ Bản</h4>
+                        <p class="text-sm text-slate-600">Bật xác thực 2 bước (2FA), nhận diện email/tin nhắn rác, cẩn trọng với những gì chia sẻ lên mạng.</p>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div class="relative p-6 bg-slate-50 rounded-2xl border border-slate-100 text-center hover:-translate-y-2 transition-transform duration-300">
+                        <div class="absolute -top-6 left-1/2 -translate-x-1/2 h-12 w-12 rounded-full bg-brand-600 text-white font-bold text-xl flex items-center justify-center border-4 border-white shadow-md">4</div>
+                        <div class="mt-8 text-orange-600 text-4xl mb-4"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                        <h4 class="text-lg font-bold text-slate-900 mb-2">Kết Bạn Với AI</h4>
+                        <p class="text-sm text-slate-600">Học cách sử dụng ChatGPT, Gemini... để viết lách, tóm tắt tài liệu, lên ý tưởng. Biến AI thành trợ lý đắc lực.</p>
+                    </div>
+                </div>
+                
+                <div class="mt-16 text-center">
+                    <button onclick="navigateTo('test')" class="px-8 py-3 bg-brand-600 text-white rounded-lg font-bold hover:bg-brand-700 transition-colors shadow-lg">Làm Bài Test Đánh Giá Khả Năng <i class="fa-solid fa-clipboard-check ml-2"></i></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- TRANG 5: BÀI TEST -->
+        <section id="test" class="page-view min-h-screen pt-28 pb-20 bg-slate-100 relative overflow-hidden">
+            <!-- Background graphics -->
+            <div class="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 rounded-full bg-brand-200/50 blur-3xl"></div>
+            <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-64 h-64 rounded-full bg-purple-200/50 blur-3xl"></div>
+
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="glass-card rounded-3xl p-8 md:p-12 shadow-xl">
+                    <div class="text-center mb-10">
+                        <h3 class="text-3xl font-bold text-slate-900 mb-4">Bạn Có Đang "Mù Công Nghệ"?</h3>
+                        <p class="text-slate-600">Hãy làm bài test 3 câu hỏi dưới đây để xem mức độ nhạy bén số của bạn nhé.</p>
+                    </div>
+
+                    <!-- Quiz Container -->
+                    <div id="quiz-container" class="max-w-2xl mx-auto">
+                        <!-- Question 1 -->
+                        <div id="q1" class="quiz-step">
+                            <h4 class="text-xl font-semibold mb-6">1. Khi phần mềm trên máy tính bị lỗi (ví dụ: Word không gõ được tiếng Việt), bạn sẽ làm gì đầu tiên?</h4>
+                            <div class="space-y-3">
+                                <label class="block p-4 border-2 border-slate-200 rounded-xl cursor-pointer hover:border-brand-500 hover:bg-brand-50 transition-all">
+                                    <input type="radio" name="q1" value="A" class="mr-3 text-brand-600 focus:ring-brand-500"> 
+                                    A. Copy thông báo lỗi và tra cứu trên Google/YouTube ngay lập tức.
+                                </label>
+                                <label class="block p-4 border-2 border-slate-200 rounded-xl cursor-pointer hover:border-brand-500 hover:bg-brand-50 transition-all">
+                                    <input type="radio" name="q1" value="B" class="mr-3 text-brand-600 focus:ring-brand-500"> 
+                                    B. Gọi điện nhờ bạn bè IT sửa giúp hoặc bỏ đó không làm nữa.
+                                </label>
+                            </div>
+                            <div class="mt-8 text-right">
+                                <button onclick="nextQ(1)" class="px-6 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors">Tiếp theo <i class="fa-solid fa-arrow-right ml-2"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- Question 2 -->
+                        <div id="q2" class="quiz-step hidden">
+                            <h4 class="text-xl font-semibold mb-6">2. Trải nghiệm của bạn với các công cụ Trí tuệ Nhân tạo (như ChatGPT, Gemini) là gì?</h4>
+                            <div class="space-y-3">
+                                <label class="block p-4 border-2 border-slate-200 rounded-xl cursor-pointer hover:border-brand-500 hover:bg-brand-50 transition-all">
+                                    <input type="radio" name="q2" value="B" class="mr-3 text-brand-600 focus:ring-brand-500"> 
+                                    A. Chỉ nghe nói trên mạng hoặc dùng thử vài câu hỏi đùa giỡn rồi thôi.
+                                </label>
+                                <label class="block p-4 border-2 border-slate-200 rounded-xl cursor-pointer hover:border-brand-500 hover:bg-brand-50 transition-all">
+                                    <input type="radio" name="q2" value="A" class="mr-3 text-brand-600 focus:ring-brand-500"> 
+                                    B. Đã dùng thử để hỗ trợ làm bài tập, viết email, hoặc tìm kiếm thông tin phức tạp.
+                                </label>
+                            </div>
+                            <div class="mt-8 flex justify-between">
+                                <button onclick="prevQ(2)" class="px-6 py-2 text-slate-600 hover:text-slate-900 transition-colors"><i class="fa-solid fa-arrow-left mr-2"></i> Quay lại</button>
+                                <button onclick="nextQ(2)" class="px-6 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors">Tiếp theo <i class="fa-solid fa-arrow-right ml-2"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- Question 3 -->
+                        <div id="q3" class="quiz-step hidden">
+                            <h4 class="text-xl font-semibold mb-6">3. Mật khẩu các tài khoản quan trọng (Email, Facebook, Ngân hàng) của bạn được đặt như thế nào?</h4>
+                            <div class="space-y-3">
+                                <label class="block p-4 border-2 border-slate-200 rounded-xl cursor-pointer hover:border-brand-500 hover:bg-brand-50 transition-all">
+                                    <input type="radio" name="q3" value="A" class="mr-3 text-brand-600 focus:ring-brand-500"> 
+                                    A. Sử dụng mật khẩu phức tạp khác nhau, có cài bảo mật 2 lớp (2FA).
+                                </label>
+                                <label class="block p-4 border-2 border-slate-200 rounded-xl cursor-pointer hover:border-brand-500 hover:bg-brand-50 transition-all">
+                                    <input type="radio" name="q3" value="B" class="mr-3 text-brand-600 focus:ring-brand-500"> 
+                                    B. Dùng chung 1-2 mật khẩu dễ nhớ (tên, ngày sinh) cho tất cả tài khoản.
+                                </label>
+                            </div>
+                            <div class="mt-8 flex justify-between">
+                                <button onclick="prevQ(3)" class="px-6 py-2 text-slate-600 hover:text-slate-900 transition-colors"><i class="fa-solid fa-arrow-left mr-2"></i> Quay lại</button>
+                                <button onclick="showResult()" class="px-8 py-3 bg-brand-600 text-white rounded-lg font-bold hover:bg-brand-700 transition-colors shadow-lg shadow-brand-500/30">Xem Kết Quả</button>
+                            </div>
+                        </div>
+
+                        <!-- Result -->
+                        <div id="quiz-result" class="hidden text-center">
+                            <div id="result-icon" class="text-6xl mb-6"></div>
+                            <h4 id="result-title" class="text-2xl font-bold mb-4"></h4>
+                            <p id="result-desc" class="text-slate-600 text-lg mb-8"></p>
+                            <button onclick="resetQuiz()" class="px-6 py-2 border-2 border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50 transition-colors">Làm lại bài test</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <div class="flex items-center mb-4 cursor-pointer" onclick="navigateTo('home')">
+                        <i class="fa-solid fa-microchip text-brand-500 text-2xl mr-2"></i>
+                        <span class="font-bold text-xl tracking-tight text-white">Tech<span class="text-brand-500">Youth</span></span>
+                    </div>
+                    <p class="text-sm">Dự án cộng đồng nhằm nâng cao nhận thức và năng lực số cho giới trẻ Việt Nam. Công nghệ là công cụ, hãy là người làm chủ.</p>
+                </div>
+                <div>
+                    <h5 class="text-white font-bold mb-4 uppercase text-sm tracking-wider">Khám Phá</h5>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="javascript:void(0)" onclick="navigateTo('home')" class="hover:text-white transition-colors">Trang Chủ</a></li>
+                        <li><a href="javascript:void(0)" onclick="navigateTo('thuc-trang')" class="hover:text-white transition-colors">Thực Trạng</a></li>
+                        <li><a href="javascript:void(0)" onclick="navigateTo('hau-qua')" class="hover:text-white transition-colors">Hậu Quả</a></li>
+                        <li><a href="javascript:void(0)" onclick="navigateTo('giai-phap')" class="hover:text-white transition-colors">Giải Pháp</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="text-white font-bold mb-4 uppercase text-sm tracking-wider">Chia sẻ chiến dịch</h5>
+                    <div class="flex space-x-4">
+                        <a href="#" class="h-10 w-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-brand-600 hover:text-white transition-all"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" class="h-10 w-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-sky-500 hover:text-white transition-all"><i class="fa-brands fa-twitter"></i></a>
+                        <a href="#" class="h-10 w-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-pink-600 hover:text-white transition-all"><i class="fa-brands fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-slate-800 mt-12 pt-8 text-center text-sm">
+                <p>&copy; 2026 TechYouth Campaign. Thiết kế để lan tỏa tri thức.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript logic -->
+    <script>
+        // SPA Navigation Logic
+        function navigateTo(viewId) {
+            // Ẩn tất cả các trang
+            document.querySelectorAll('.page-view').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            // Hiển thị trang mục tiêu
+            const targetView = document.getElementById(viewId);
+            if (targetView) {
+                targetView.classList.add('active');
+            }
+
+            // Cuộn lên đầu trang
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Cập nhật trạng thái Active cho Menu Desktop
+            document.querySelectorAll('.nav-link').forEach(link => {
+                // Reset màu
+                if(link.classList.contains('bg-brand-600')) {
+                    // Là nút "Kiểm tra" - không đổi màu chữ, giữ nguyên style nút
+                } else {
+                    link.classList.remove('text-brand-600');
+                    link.classList.add('text-slate-600');
+                }
+                
+                // Highlight trang hiện tại
+                if (link.getAttribute('data-target') === viewId && !link.classList.contains('bg-brand-600')) {
+                    link.classList.remove('text-slate-600');
+                    link.classList.add('text-brand-600');
+                }
+            });
+
+            // Đóng mobile menu nếu đang mở
+            const menu = document.getElementById('mobile-menu');
+            if (!menu.classList.contains('hidden')) {
+                menu.classList.add('hidden');
+            }
+        }
+
+        // Mobile Menu Toggle
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        // Quiz Logic
+        function nextQ(current) {
+            const selected = document.querySelector(`input[name="q${current}"]:checked`);
+            if (!selected) {
+                showToast("Vui lòng chọn một đáp án!");
+                return;
+            }
+            document.getElementById(`q${current}`).classList.add('hidden');
+            document.getElementById(`q${current + 1}`).classList.remove('hidden');
+        }
+
+        function prevQ(current) {
+            document.getElementById(`q${current}`).classList.add('hidden');
+            document.getElementById(`q${current - 1}`).classList.remove('hidden');
+        }
+
+        function showResult() {
+            const selected = document.querySelector(`input[name="q3"]:checked`);
+            if (!selected) {
+                showToast("Vui lòng chọn một đáp án!");
+                return;
+            }
+
+            // Tính điểm
+            let score = 0;
+            for(let i=1; i<=3; i++) {
+                if(document.querySelector(`input[name="q${i}"]:checked`).value === 'A') {
+                    score++;
+                }
+            }
+
+            document.getElementById('q3').classList.add('hidden');
+            const resultDiv = document.getElementById('quiz-result');
+            const icon = document.getElementById('result-icon');
+            const title = document.getElementById('result-title');
+            const desc = document.getElementById('result-desc');
+
+            resultDiv.classList.remove('hidden');
+
+            if(score === 3) {
+                icon.innerHTML = '<i class="fa-solid fa-trophy text-yellow-500"></i>';
+                title.innerText = 'Xuất Sắc! Bạn là một "Công Dân Số" đích thực.';
+                title.className = "text-2xl font-bold mb-4 text-green-600";
+                desc.innerText = 'Bạn có tư duy tốt về công nghệ, tự học hỏi và biết cách bảo vệ mình. Hãy tiếp tục phát huy và chia sẻ kiến thức cho người khác nhé!';
+            } else if (score === 2) {
+                icon.innerHTML = '<i class="fa-solid fa-thumbs-up text-blue-500"></i>';
+                title.innerText = 'Khá Tốt! Nhưng Vẫn Cần Nâng Cấp.';
+                title.className = "text-2xl font-bold mb-4 text-blue-600";
+                desc.innerText = 'Bạn có hiểu biết cơ bản, nhưng ở một vài khía cạnh bạn vẫn còn ỷ lại. Hãy rèn luyện thêm kỹ năng tự giải quyết vấn đề và tìm hiểu về AI nhé.';
+            } else {
+                icon.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-red-500"></i>';
+                title.innerText = 'Báo Động! Bạn đang có dấu hiệu "Mù Công Nghệ".';
+                title.className = "text-2xl font-bold mb-4 text-red-600";
+                desc.innerText = 'Đừng lo lắng! Quan trọng là bạn đã nhận ra vấn đề. Hãy chuyển sang phần "Giải Pháp" và bắt đầu thực hành ngay hôm nay để không bị tụt hậu.';
+            }
+        }
+
+        function resetQuiz() {
+            document.getElementById('quiz-result').classList.add('hidden');
+            document.querySelectorAll('input[type="radio"]').forEach(el => el.checked = false);
+            document.getElementById('q1').classList.remove('hidden');
+        }
+
+        // Custom Toast Notification
+        function showToast(msg) {
+            const toast = document.createElement('div');
+            toast.className = 'fixed bottom-4 right-4 bg-slate-900 text-white px-6 py-3 rounded-lg shadow-xl z-50 transform transition-all translate-y-10 opacity-0';
+            toast.innerText = msg;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.remove('translate-y-10', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-10', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
